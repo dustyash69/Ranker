@@ -7,6 +7,7 @@ import tkinter as tk
 from tkinter import ttk
 from tkinter import filedialog
 import time
+import logging
 from collections import defaultdict
 import os
 from io import StringIO
@@ -17,6 +18,7 @@ def Location():
     location = filedialog.askdirectory() + '/'
     if len(location) > 1:
         Debug.config(text="Click The Download Button.",fg="green")
+        logging.basicConfig(filename=location+'log.txt', filemode='a', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
     else:
         Debug.config(text="Pick a Folder!",fg="red")
 
@@ -25,10 +27,10 @@ def DownloadData():
     try:
         v = int(loadTime)
     except ValueError:
-        Debug.config(text="Pick a Number!",fg="red")
+        Debug.config(text="Pick a Number for loadTime!",fg="red")
         return
     if int(loadTime) < 0:
-        Debug.config(text="Pick a Whole Number!",fg="red")
+        Debug.config(text="Pick a Whole Number for loadTime!",fg="red")
         return
     try:
         v = len(location)
@@ -41,14 +43,14 @@ def DownloadData():
         driver = webdriver.Edge()
     except Exception as e:
         Debug.config(text="Unexpected exception. Downloading Drivers.",fg="red")
-        print(e)
+        logging.error("Driver Error", exc_info=True)
         try:
             service = Service(EdgeChromiumDriverManager().install())
             driver = webdriver.Edge(service=service)
             Debug.config(text="Scraping the website...",fg="white")
         except Exception as e:
-            Debug.config(text="Unexpected exception. Trying headed mode.",fg="red")
-            print(e)
+            Debug.config(text="Fatal error. Unable to continue.",fg="red")
+            logging.error("Fatal Error", exc_info=True)
             return
     driver.get("https://josaa.admissions.nic.in/Applicant/seatallotmentresult/currentorcr.aspx")
     driver.implicitly_wait(loadTime)
@@ -106,10 +108,10 @@ def GetResults():
     try:
         rank = int(rank)
     except ValueError:
-        Debug.config(text="Pick a Number!",fg="red")
+        Debug.config(text="Enter your rank!",fg="red")
         return
     if int(rank) < 0:
-        Debug.config(text="Pick a Whole Number!",fg="red")
+        Debug.config(text="A rank is a whole number...",fg="red")
         return
     Debug.config(text="Getting Results...",fg="white")
 
@@ -160,13 +162,16 @@ def GetResults():
                             my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
         i = i + 1
 
-    planck_length = max(len(v) for v in my_dict.values())
-    data = {k: v + [None] * (planck_length - len(v)) for k,v in my_dict.items()}
-    if os.path.exists(location + "Results.xlsx"):
-        os.remove(location + "Results.xlsx")
-    df = pd.DataFrame(data)
-    df.to_excel(location + "Results.xlsx", index=False)
-    Debug.config(text="Finished.",fg="green")
+    try:
+        planck_length = max(len(v) for v in my_dict.values())
+        data = {k: v + [None] * (planck_length - len(v)) for k,v in my_dict.items()}
+        if os.path.exists(location + "Results.xlsx"):
+            os.remove(location + "Results.xlsx")
+        df = pd.DataFrame(data)
+        df.to_excel(location + "Results.xlsx", index=False)
+        Debug.config(text="Finished.",fg="green")
+    except Exception as e:
+        logging.error("Data Error", exc_info=True)
 
 def Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders):
     t = False
@@ -270,13 +275,13 @@ def Find(condition):
             Debug.config(text="The minimum rank for given options is: " + str(max(ranks)),fg="green")
         except Exception as e:
             Debug.config(text="No data available for the given options.",fg="red")
-            print(e)
+            logging.error("Min Rank Error", exc_info=True)
     if condition == "av":
         try:
             Debug.config(text="The average rank for given options is: " + str(statistics.fmean((ranks))),fg="green")
         except Exception as e:
             Debug.config(text="No data available for the given options.",fg="red")
-            print(e)
+            logging.error("Av Rank Error", exc_info=True)
 
 def GetData():
     ranks = []
@@ -344,7 +349,6 @@ def on_1_click(event):
         input1.config(fg='black')
 
 def on_2_click(event):
-
     if input2.get() == "What is your Rank?":
         input2.delete(0, tk.END)
         input2.config(fg='black')
