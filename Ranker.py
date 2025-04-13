@@ -115,7 +115,7 @@ def GetResults():
         return
     Debug.config(text="Getting Results...",fg="white")
 
-    type = dropdown1.get()
+    t = dropdown1.get()
     college = dropdown3.get()
     course = dropdown4.get()
     quota = dropdown5.get()
@@ -143,19 +143,19 @@ def GetResults():
         k = int(j)
         if rank <= k:
             if Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders) == True:
-                if type == "All":
+                if t == "All":
                     if var.get() == 0:
                         my_dict[colleges[i]].append(courses[i])
                     else:
                         my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
-                elif type == "Government Funded Technical Institutions":
+                elif t == "Government Funded Technical Institutions":
                     if str("Indian Institute of Information Technology").lower() not in colleges[i].lower() and str("National Institute of Technology").lower() not in colleges[i].lower() and str("Indian Institute of Technology").lower() not in colleges[i].lower():
                         if var.get() == 0:
                             my_dict[colleges[i]].append(courses[i])
                         else:
                             my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
-                else:
-                    if type.lower() in colleges[i].lower():
+                elif t == "Indian Institute of Information Technology" or t == "National Institute of Technology" or t == "Indian Institute of Technology":
+                    if t.lower() in colleges[i].lower():
                         if var.get() == 0:
                             my_dict[colleges[i]].append(courses[i])
                         else:
@@ -214,8 +214,8 @@ def Check(i, college, course, quota, category, gender, colleges, courses, quotas
     return t
 
 def GetValues():
-    type = dropdown1.get()
-    if type == "Select Institute type:":
+    t = dropdown1.get()
+    if t == "Select Institute type:":
         Debug.config(text="Pick the type of Institute!",fg="red")
         return
     try:
@@ -225,7 +225,7 @@ def GetValues():
         return
     Debug.config(text="Getting Values...",fg="white")
 
-    df = pd.read_excel(location + "Round 1.xlsx")
+    df = pd.read_excel(location + "Round " + dropdown2.get() + ".xlsx")
     colleges = list(df.loc[1:]["Institute"].unique())
     courses = list(df.loc[1:]["Academic Program Name"].unique())
     quotas = list(df.loc[1:]["Quota"].unique())
@@ -285,7 +285,7 @@ def Find(condition):
 
 def GetData():
     ranks = []
-    type = dropdown1.get()
+    t = dropdown1.get()
     college = dropdown3.get()
     course = dropdown4.get()
     quota = dropdown5.get()
@@ -332,13 +332,13 @@ def GetData():
         if dropdown7.get() == "Select Gender:":
             gender = genders[i]
         if Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders) == True:
-            if type == "All":
+            if t == "All":
                 ranks.append(k)
-            elif type == "Government Funded Technical Institutions":
+            elif t == "Government Funded Technical Institutions":
                 if str("Indian Institute of Information Technology").lower() not in colleges[i].lower() and str("National Institute of Technology").lower() not in colleges[i].lower() and str("Indian Institute of Technology").lower() not in colleges[i].lower():
                     ranks.append(k)
-            else:
-                if type.lower() in colleges[i].lower():
+            elif t == "Indian Institute of Information Technology" or t == "National Institute of Technology" or t == "Indian Institute of Technology":
+                if t.lower() in colleges[i].lower():
                     ranks.append(k)
         i = i + 1
     return ranks
@@ -376,6 +376,11 @@ dropdown1.set("Select Institute type:")
 dropdown1.bind("<Key>", lambda e: "break")
 dropdown1.pack(pady=5)
 
+dropdown2 = ttk.Combobox(app, width = 150, values=["1", "2", "3", "4", "5"]) # rounds
+dropdown2.set("Select Round Number:")
+dropdown2.bind("<Key>", lambda e: "break")
+dropdown2.pack(pady=5)
+
 var = tk.IntVar()
 c1 = tk.Checkbutton(app, text = "Try and remove duplicate courses?", variable=var, onvalue=1, offvalue=0)
 c1.pack(pady=5)
@@ -387,11 +392,6 @@ input2 = tk.Entry(app, width=150, fg='black', font=('Helvetica', 10))
 input2.insert(0, "What is your Rank?")
 input2.bind('<FocusIn>', on_2_click)
 input2.pack(pady=5)
-
-dropdown2 = ttk.Combobox(app, width = 150, values=["1", "2", "3", "4", "5"]) # rounds
-dropdown2.set("Select Round Number:")
-dropdown2.bind("<Key>", lambda e: "break")
-dropdown2.pack(pady=5)
 
 dropdown3 = ttk.Combobox(app, width = 150, values=[]) # names
 dropdown3.set("Select Institute name:")
