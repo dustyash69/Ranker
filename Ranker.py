@@ -10,14 +10,17 @@ import time
 import logging
 from collections import defaultdict
 import os
+from os import listdir
+from os.path import isfile, join
 from io import StringIO
 import statistics
+from datetime import datetime
 
 def Location():
     global location
     location = filedialog.askdirectory() + '/'
     if len(location) > 1:
-        Debug.config(text="Click The Download Button.",fg="green")
+        Debug.config(text="Click The Download Button if this is the first time.",fg="green")
         logging.basicConfig(filename=location+'log.txt', filemode='a', level=logging.ERROR, format='%(asctime)s - %(levelname)s - %(message)s')
     else:
         Debug.config(text="Pick a Folder!",fg="red")
@@ -143,7 +146,7 @@ def GetResults():
         k = int(j)
         if rank <= k:
             if Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders) == True:
-                if t == "All":
+                if t == "All" and str("Indian Institute of Technology").lower() not in colleges[i].lower():
                     if var.get() == 0:
                         my_dict[colleges[i]].append(courses[i])
                     else:
@@ -155,7 +158,7 @@ def GetResults():
                         else:
                             my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
                 elif t == "Indian Institute of Information Technology" or t == "National Institute of Technology" or t == "Indian Institute of Technology":
-                    if t.lower() in colleges[i].lower():
+                    if t.lower() in colleges[i].lower() and courses[i] not in my_dict[colleges[i]]:
                         if var.get() == 0:
                             my_dict[colleges[i]].append(courses[i])
                         else:
@@ -165,13 +168,13 @@ def GetResults():
     try:
         planck_length = max(len(v) for v in my_dict.values())
         data = {k: v + [None] * (planck_length - len(v)) for k,v in my_dict.items()}
-        if os.path.exists(location + "Results.xlsx"):
-            os.remove(location + "Results.xlsx")
         df = pd.DataFrame(data)
-        df.to_excel(location + "Results.xlsx", index=False)
+        df.to_excel(location + "Results " + str(GetIndex()) + ".xlsx", index=False)
+        SaveData(location + "Results " + str(GetIndex()) + ".xlsx", "Success")
         Debug.config(text="Finished.",fg="green")
     except Exception as e:
         logging.error("Data Error", exc_info=True)
+        SaveData(location + "Results " + str(GetIndex()) + ".xlsx", "Failure")
 
 def Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders):
     t = False
@@ -198,6 +201,8 @@ def Check(i, college, course, quota, category, gender, colleges, courses, quotas
     if quotas[i] == "AI":
         t = True
     elif quotas[i] == quota:
+        t = True
+    elif varB.get() == 1:
         t = True
     else:
         return False
@@ -343,6 +348,26 @@ def GetData():
         i = i + 1
     return ranks
 
+def GetIndex():
+    i = 1
+    onlyfiles = [f for f in listdir(location.replace('/', '')) if isfile(join(location.replace('/', ''), f))]
+    for file in onlyfiles:
+        if "Result" in file:
+            i = i + 1
+    return i
+
+def SaveData(name, state):
+    list = []
+    list.append("Result " + str(GetIndex()) + ": " + str(datetime.now()) + " " + state)
+    list.append(" Location - " + name)
+    list.append(" Configurations:")
+    list.append(" loadTime- " + str(input1.get()) + ", Institute type- " + dropdown1.get() + ", Round number- " + dropdown2.get() + ", Duplicate courses- " + str(var.get()))
+    list.append(" Rank- " + str(input2.get()) + ", Institute name- " + dropdown3.get() + ", Course- " + dropdown4.get() + ", Quota- " + dropdown5.get() + ", Category- " + dropdown6.get())
+    list.append(" Gender- " + dropdown7.get() + ", Ignore Quota- " + str(varB.get()) + "\n")
+    with open(location + "save.txt", 'a') as f:
+        f.writelines(list)
+        f.close()
+
 def on_1_click(event):
     if input1.get() == "How long should the app wait for loading?":
         input1.delete(0, tk.END)
@@ -418,14 +443,21 @@ dropdown7.set("Select Gender:")
 dropdown7.bind("<Key>", lambda e: "break")
 dropdown7.pack(pady=5)
 
+varB = tk.IntVar()
+c2 = tk.Checkbutton(app, text = "Ignore Quota?", variable=varB, onvalue=1, offvalue=0)
+c2.pack(pady=5)
+
 button4 = tk.Button(app, text="Get Results", fg = "blue", command=GetResults)
 button4.pack(pady=10)
 
-button5 = tk.Button(app, text="Find minimum rank for given options", fg = "blue", command=lambda: Find("min"))
-button5.pack(pady=10)
+frame1 = tk.Frame(app)
+frame1.pack(pady=10)
 
-button6 = tk.Button(app, text="Find average rank for given options", fg = "blue", command=lambda: Find("av"))
-button6.pack(pady=10)
+button5 = tk.Button(frame1, text="Find minimum rank for given options", fg = "blue", command=lambda: Find("min"))
+button5.grid(row=0, column=0, padx=10)
+
+button6 = tk.Button(frame1, text="Find average rank for given options", fg = "blue", command=lambda: Find("av"))
+button6.grid(row=0, column=1, padx=10)
 
 Debug = tk.Label(app, text="Start with loading time and download location.", font=("Helvetica", 10), bg = "black", fg = "white")
 Debug.pack(pady=10)
