@@ -38,6 +38,8 @@ In the `Select Institute type:` dropdown, select `Indian Institute of Technology
 9) In the `Select Gender:` dropdown, select your gender. For men, select `Gender-neutral` otherwise select `Female only(including Supernumerary)`.
 10) Click on the `Get Results` button. Wait for the app to compile your results.
 
+**Note -** The `Ignore Quota?` checbox can be used to ignore the quota of the colleges. If you get **any** data error, it can be attempted to fix with this option by enabling it. If you feel like there are less colleges than expected, ticking this checkbox will likely fix it.
+
 ## Where are the results?
 The college and the branches you got at them are stored in an excel file in the folder you selected before. There is also a text file in it to guide you.
 
@@ -45,3 +47,5 @@ The college and the branches you got at them are stored in an excel file in the 
 Ranker lets you find the **minimum and average rank required to get into any institute at any branch** for any category, gender, etc.
 You can provide as little or as much information you want. Ranker will work with anything.
 You can find the result of your query in the green text at the bottom of the app.
+
+**Troubleshooting -** If you get any data errors in it, try to be less specific, especially on the quota and course. Try removing duplicate courses and ignoring quota. If nothing helps, be less specific.
