@@ -27,9 +27,9 @@ In the `Select Institute type:` dropdown, select `Indian Institute of Technology
 3) Then, click on the `Get Values` button. Wait for the values to load.
  
 ### For JEE Mains:
-4) In the `What is your Rank?` Input field, Enter the rank you got in JEEM. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
+4) In the `What is your Rank?` Input field, Enter the rank you got in `JEE Mains`. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
 ### For JEE Advanced:
-4) In the `What is your Rank?` Input field, Enter the rank you got in JEEA. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
+4) In the `What is your Rank?` Input field, Enter the rank you got in `JEE Advanced`. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
  
 5) In the `Select Institute name:` dropdown, select the Institute you prefer. Select `All` if you do not have any preference.
 6) In the `Select Course name:` dropdown, select the Branch you prefer. Select `All` if you do not have any preference.
