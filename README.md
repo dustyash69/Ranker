@@ -17,7 +17,6 @@ After downloading the .exe file from the link above, open it. Alternatively, you
 Then, Click on the `Choose Location` button and select the Folder you used before.
 
 ## What do I do now?
-``
 ### For JEE Mains:
 In the `Select Institute type:` dropdown, select any option except for `IIT`. `All` will select all types of Institutes, except for `IIT`.
 ### For JEE Advanced:
@@ -26,3 +25,4 @@ In the `Select Institute type:` dropdown, select `Indian Institute of Technology
 1) Now, select any round from `Select Round Number:`. Colleges and Branches vary at each Rank in each Round.
 2) There is a checkbox for `Try and remove duplicate courses?`. If you tick it, the app will try to find duplicate branches and remove them.
 3) The, click on the `Get Values` button.
+``
