@@ -24,5 +24,19 @@ In the `Select Institute type:` dropdown, select `Indian Institute of Technology
 
 1) Now, select any round from `Select Round Number:`. Colleges and Branches vary at each Rank in each Round.
 2) There is a checkbox for `Try and remove duplicate courses?`. If you tick it, the app will try to find duplicate branches and remove them.
-3) The, click on the `Get Values` button.
-``
+3) Then, click on the `Get Values` button. Wait for the values to load.
+4) In the `What is your Rank?` Input field, Enter your rank. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
+5) In the `Select Institute name:` dropdown, select the Institute you prefer. Select `All` if you do not have any preference.
+6) In the `Select Course name:` dropdown, select the Branch you prefer. Select `All` if you do not have any preference.
+7) In the `Select Quota:` dropdown, select your Quota. If you have a home state quota, please select that. This will also include `AI`, i.e., "All India" quota colleges. If you do not have any, select `AI`.
+8) In the `Select Category:` dropdown, select your Category.
+9) In the `Select Gender:` dropdown, select your gender. For men, select `Gender-neutral` otherwise select `Female only(including Supernumerary)`.
+10) Click on the `Get Results` button. Wait for the app to compile your results.
+
+## Where are the results?
+The college and the branches you got at them are stored in an excel file in the folder you selected before. There is also a text file in it to guide you.
+
+# Some Cool Stuff you can do in Ranker:
+Ranker lets you find the minimum and average rank required to get into any institute at any branch for any category, gender, etc.
+You can provide as little or as much information you want. Ranker will work with anything.
+You can find the result of your query in the green text at the bottom of the app.
