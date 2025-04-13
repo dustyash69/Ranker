@@ -48,4 +48,7 @@ Ranker lets you find the **minimum and average rank required to get into any ins
 You can provide as little or as much information you want. Ranker will work with anything.
 You can find the result of your query in the green text at the bottom of the app.
 
-**Troubleshooting -** If you get any data errors in it, try to be less specific, especially on the quota and course. Try removing duplicate courses and ignoring quota. If nothing helps, be less specific.
+**Note -** If you get any data errors in it, try to be less specific, especially on the quota and course. Try removing duplicate courses and ignoring quota. If nothing helps, be less specific.
+
+# Troubleshooting:
+Ranker keeps track of every error you get and the configurations you had when you tried to get the results in 2 seperate text files called `log` and `save`. Reading through these files can help you fix the errors.
