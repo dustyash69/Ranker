@@ -25,10 +25,12 @@ In the `Select Institute type:` dropdown, select `Indian Institute of Technology
 1) Now, select any round from `Select Round Number:`. Colleges and Branches vary at each Rank in each Round.
 2) There is a checkbox for `Try and remove duplicate courses?`. If you tick it, the app will try to find duplicate branches and remove them.
 3) Then, click on the `Get Values` button. Wait for the values to load.
+ 
 ### For JEE Mains:
 4) In the `What is your Rank?` Input field, Enter the rank you got in JEEM. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
 ### For JEE Advanced:
 4) In the `What is your Rank?` Input field, Enter the rank you got in JEEA. **If you belong to Open Category, enter your CRL Rank otherwise enter your category rank.**
+ 
 5) In the `Select Institute name:` dropdown, select the Institute you prefer. Select `All` if you do not have any preference.
 6) In the `Select Course name:` dropdown, select the Branch you prefer. Select `All` if you do not have any preference.
 7) In the `Select Quota:` dropdown, select your Quota. If you have a home state quota, please select that. This will also include `AI`, i.e., "All India" quota colleges. If you do not have any, select `AI`.
