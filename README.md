@@ -1,6 +1,6 @@
 # What is Ranker? Where Can I download it?
 Ranker is a free college predictor for JEE Mains & Advanced, based on rank.
-You can download the .exe version of this code [here](link).
+You can download the .exe version of this code [here](https://drive.google.com/file/d/1NqmYzG8SIdgVZSk7HGCOUEXSwLBjJI4P/view?usp=sharing).
 The above link is of Google Drive. Click on "Download Anyway" when Google Drive asks to. The source code is available in `Ranker.py`.
 After downloading the .exe file from the link above, open it. Alternatively, you can run the code from `Ranker.py` yourself. Apart from the used modules, you will need `beautifulsoup4, lxml & openpyxl`. Or, you can use `pip install pandas[all]`.
 
