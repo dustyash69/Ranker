@@ -147,16 +147,18 @@ def GetResults():
         if rank <= k:
             if Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders) == True:
                 if t == "All" and str("Indian Institute of Technology").lower() not in colleges[i].lower():
-                    if var.get() == 0:
-                        my_dict[colleges[i]].append(courses[i])
-                    else:
-                        my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
-                elif t == "Government Funded Technical Institutions":
-                    if str("Indian Institute of Information Technology").lower() not in colleges[i].lower() and str("National Institute of Technology").lower() not in colleges[i].lower() and str("Indian Institute of Technology").lower() not in colleges[i].lower():
+                    if t.lower() in colleges[i].lower() and courses[i] not in my_dict[colleges[i]]:
                         if var.get() == 0:
                             my_dict[colleges[i]].append(courses[i])
                         else:
                             my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
+                elif t == "Government Funded Technical Institutions":
+                    if str("Indian Institute of Information Technology").lower() not in colleges[i].lower() and str("National Institute of Technology").lower() not in colleges[i].lower() and str("Indian Institute of Technology").lower() not in colleges[i].lower():
+                        if t.lower() in colleges[i].lower() and courses[i] not in my_dict[colleges[i]]:
+                            if var.get() == 0:
+                                my_dict[colleges[i]].append(courses[i])
+                            else:
+                                my_dict[colleges[i]].append(str(courses[i]).split('(')[0].strip())
                 elif t == "Indian Institute of Information Technology" or t == "National Institute of Technology" or t == "Indian Institute of Technology":
                     if t.lower() in colleges[i].lower() and courses[i] not in my_dict[colleges[i]]:
                         if var.get() == 0:
@@ -170,11 +172,11 @@ def GetResults():
         data = {k: v + [None] * (planck_length - len(v)) for k,v in my_dict.items()}
         df = pd.DataFrame(data)
         df.to_excel(location + "Results " + str(GetIndex()) + ".xlsx", index=False)
-        SaveData(location + "Results " + str(GetIndex()) + ".xlsx", "Success")
+        SaveDataA(location + "Results " + str(GetIndex() - 1) + ".xlsx", "Success")
         Debug.config(text="Finished.",fg="green")
     except Exception as e:
         logging.error("Data Error", exc_info=True)
-        SaveData(location + "Results " + str(GetIndex()) + ".xlsx", "Failure")
+        SaveDataA(location + "Results " + str(GetIndex()) + ".xlsx", "Failure")
 
 def Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders):
     t = False
@@ -194,7 +196,7 @@ def Check(i, college, course, quota, category, gender, colleges, courses, quotas
     else:
         if course == "All":
             t = True
-        elif str(courses[i]).split('(')[0].strip() == str(course).split('(')[0].strip():
+        elif courses[i].split('(')[0].strip() == course.split('(')[0].strip():
             t = True
         else:
             return False
@@ -231,21 +233,35 @@ def GetValues():
     Debug.config(text="Getting Values...",fg="white")
 
     df = pd.read_excel(location + "Round " + dropdown2.get() + ".xlsx")
-    colleges = list(df.loc[1:]["Institute"].unique())
-    courses = list(df.loc[1:]["Academic Program Name"].unique())
+    collegesA = list(df.loc[1:]["Institute"])
+    colleges = []
+    coursesA = list(df.loc[1:]["Academic Program Name"])
+    courses = []
     quotas = list(df.loc[1:]["Quota"].unique())
     categories = list(df.loc[1:]["Seat Type"].unique())
     genders = list(df.loc[1:]["Gender"].unique())
 
-    if dropdown1.get() != "All":
-        if dropdown1.get() == "Government Funded Technical Institutions":
-            for i in reversed(colleges):
-                if str("Indian Institute of Information Technology").lower() in i.lower() or str("National Institute of Technology").lower() in i.lower() or str("Indian Institute of Technology").lower() in i.lower():
-                    colleges.remove(i)
+    z = 0
+    while z < len(collegesA):
+        if dropdown1.get() != "All":
+            if dropdown1.get() == "Government Funded Technical Institutions":
+                if str("Indian Institute of Information Technology").lower() not in collegesA[z].lower() and str("National Institute of Technology").lower() not in collegesA[z].lower() and str("Indian Institute of Technology").lower() not in collegesA[z].lower():
+                    if collegesA[z] not in colleges:
+                        colleges.append(collegesA[z])
+                    if coursesA[z] not in courses:
+                        courses.append(coursesA[z])
+            else:
+                if dropdown1.get().lower() in collegesA[z].lower():
+                    if collegesA[z] not in colleges:
+                        colleges.append(collegesA[z])
+                    if coursesA[z] not in courses:
+                        courses.append(coursesA[z])
         else:
-            for i in reversed(colleges):
-                if dropdown1.get().lower() not in i.lower():
-                    colleges.remove(i)
+            if collegesA[z] not in colleges:
+                colleges.append(collegesA[z])
+            if coursesA[z] not in courses:
+                courses.append(coursesA[z])
+        z = z + 1
     
     if var.get() == 1:
         course = []
@@ -274,22 +290,41 @@ def Find(condition):
         Debug.config(text="Pick a Folder!",fg="red")
         return
     Debug.config(text="Getting Data...",fg="white")
-    ranks = GetData()
+    data = GetData()
+    genders = data[5]
+    categories = data[4]
+    quotas = data[3]
+    colleges = data[2]
+    courses = data[1]
+    ranks = data[0]
     if condition == "min":
         try:
-            Debug.config(text="The minimum rank for given options is: " + str(max(ranks)),fg="green")
+            rank = max(ranks)
+            i = ranks.index(rank)
+            Debug.config(text=str(rank) + " " + courses[i] + " " + colleges[i] + " " + quotas[i] + " " + categories[i] + " " + genders[i],fg="green")
+            SaveDataB("Success", "Min", str(rank), courses[i], colleges[i], quotas[i], categories[i], genders[i])
         except Exception as e:
             Debug.config(text="No data available for the given options.",fg="red")
             logging.error("Min Rank Error", exc_info=True)
+            SaveDataB("Failure", "Min", "NA", "Na", "NA", "NA", "NA", "NA")
     if condition == "av":
         try:
-            Debug.config(text="The average rank for given options is: " + str(statistics.fmean((ranks))),fg="green")
+            rank = statistics.fmean(ranks)
+            i = ranks.index(min(ranks, key=lambda x: abs(x - rank)))
+            Debug.config(text=str(rank) + " " + courses[i] + " " + colleges[i] + " " + quotas[i] + " " + categories[i] + " " + genders[i],fg="green")
+            SaveDataB("Success", "Average", str(rank), courses[i], colleges[i], quotas[i], categories[i], genders[i])
         except Exception as e:
             Debug.config(text="No data available for the given options.",fg="red")
             logging.error("Av Rank Error", exc_info=True)
+            SaveDataB("Failure", "Average", "NA", "NA", "NA", "NA", "NA", "NA")
 
 def GetData():
-    ranks = []
+    finalRanks = []
+    finalCourses = []
+    finalColleges = []
+    finalQuotas = []
+    finalCategories = []
+    finalGenders = []
     t = dropdown1.get()
     college = dropdown3.get()
     course = dropdown4.get()
@@ -336,17 +371,33 @@ def GetData():
             category = categories[i]
         if dropdown7.get() == "Select Gender:":
             gender = genders[i]
+
         if Check(i, college, course, quota, category, gender, colleges, courses, quotas, categories, genders) == True:
             if t == "All":
-                ranks.append(k)
+                finalRanks.append(k)
+                finalCourses.append(courses[i])
+                finalColleges.append(colleges[i])
+                finalQuotas.append(quotas[i])
+                finalCategories.append(categories[i])
+                finalGenders.append(genders[i])
             elif t == "Government Funded Technical Institutions":
                 if str("Indian Institute of Information Technology").lower() not in colleges[i].lower() and str("National Institute of Technology").lower() not in colleges[i].lower() and str("Indian Institute of Technology").lower() not in colleges[i].lower():
-                    ranks.append(k)
+                    finalRanks.append(k)
+                    finalCourses.append(courses[i])
+                    finalColleges.append(colleges[i])
+                    finalQuotas.append(quotas[i])
+                    finalCategories.append(categories[i])
+                    finalGenders.append(genders[i])
             elif t == "Indian Institute of Information Technology" or t == "National Institute of Technology" or t == "Indian Institute of Technology":
                 if t.lower() in colleges[i].lower():
-                    ranks.append(k)
+                    finalRanks.append(k)
+                    finalCourses.append(courses[i])
+                    finalColleges.append(colleges[i])
+                    finalQuotas.append(quotas[i])
+                    finalCategories.append(categories[i])
+                    finalGenders.append(genders[i])
         i = i + 1
-    return ranks
+    return finalRanks, finalCourses, finalColleges, finalQuotas, finalCategories, finalGenders
 
 def GetIndex():
     i = 1
@@ -356,7 +407,7 @@ def GetIndex():
             i = i + 1
     return i
 
-def SaveData(name, state):
+def SaveDataA(name, state):
     list = []
     list.append("Result " + str(GetIndex()) + ": " + str(datetime.now()) + " " + state)
     list.append(" Location - " + name)
@@ -364,9 +415,22 @@ def SaveData(name, state):
     list.append(" loadTime- " + str(input1.get()) + ", Institute type- " + dropdown1.get() + ", Round number- " + dropdown2.get() + ", Duplicate courses- " + str(var.get()))
     list.append(" Rank- " + str(input2.get()) + ", Institute name- " + dropdown3.get() + ", Course- " + dropdown4.get() + ", Quota- " + dropdown5.get() + ", Category- " + dropdown6.get())
     list.append(" Gender- " + dropdown7.get() + ", Ignore Quota- " + str(varB.get()) + "\n")
-    with open(location + "save.txt", 'a') as f:
-        f.writelines(list)
-        f.close()
+    with open(location + "save.txt", 'a') as file:
+        file.writelines(list)
+        file.close()
+
+def SaveDataB(state, function, rank, course, college, quota, category, gender):
+    list = []
+    list.append("Query: " + function + " " + str(datetime.now()) + " " + state)
+    list.append(" Configurations:")
+    list.append(" Institute type- " + dropdown1.get() + ", Duplicate courses- " + str(var.get()))
+    list.append(", Institute name- " + dropdown3.get() + ", Course- " + dropdown4.get() + ", Quota- " + dropdown5.get() + ", Category- " + dropdown6.get())
+    list.append(" Gender- " + dropdown7.get() + ", Ignore Quota- " + str(varB.get()))
+    list.append(", Results: Rank- " + str(rank) + ", Course- " + course + ", College- " + college + ", Quota- " + quota)
+    list.append(", Category- " + category + ", Gender- " + gender + "\n")
+    with open(location + "save.txt", 'a') as file:
+        file.writelines(list)
+        file.close()
 
 def on_1_click(event):
     if input1.get() == "How long should the app wait for loading?":
