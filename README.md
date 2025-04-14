@@ -12,6 +12,7 @@ After downloading the .exe file from the link above, open it. Alternatively, you
 1) In the `How long should the app wait for loading?` input field, enter a whole number. This number is the amount of seconds that the app waits for the page to load. This number depends on how fast your PC and Internet is. **3** usually does the trick.
 2) Now, go to your File Manager and create a new folder where Ranker will store files. Click on the `Choose Location` button and select the Folder you just created.
 3) Click on the `Download data` button. This will open a new tab in Microsoft Edge. Please do **NOT** interact with this window in any way. Let it do its job, undisturbed. This may take a while.
+**Note -** If you get a `Fatal error` (It is present at the bottom in red and it'll also show up as `Session not created` in log file), Just restart the app and it'll be fixed.
 
 ## If you've already downloaded the files before:
 Then, Click on the `Choose Location` button and select the Folder you used before.
