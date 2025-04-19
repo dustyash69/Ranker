@@ -401,7 +401,7 @@ def GetData():
 
 def GetIndex():
     i = 1
-    onlyfiles = [f for f in listdir(location.replace('/', '')) if isfile(join(location, f))]
+    onlyfiles = [f for f in listdir(location) if isfile(join(location, f))]
     for file in onlyfiles:
         if "Result" in file:
             i = i + 1
