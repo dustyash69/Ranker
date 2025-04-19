@@ -257,7 +257,7 @@ def GetValues():
                     if coursesA[z] not in courses:
                         courses.append(coursesA[z])
         else:
-            if collegesA[z] not in colleges:
+            if collegesA[z] not in colleges and str("Indian Institute of Technology").lower() not in collegesA[z].lower():
                 colleges.append(collegesA[z])
             if coursesA[z] not in courses:
                 courses.append(coursesA[z])
@@ -401,7 +401,7 @@ def GetData():
 
 def GetIndex():
     i = 1
-    onlyfiles = [f for f in listdir(location.replace('/', '')) if isfile(join(location.replace('/', ''), f))]
+    onlyfiles = [f for f in listdir(location.replace('/', '')) if isfile(join(location, f))]
     for file in onlyfiles:
         if "Result" in file:
             i = i + 1
